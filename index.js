@@ -9,6 +9,27 @@ const connectDB = require("./config/db");
 dotenv.config(); // Load .env variables
 connectDB(); // Connect to MongoDB
 
+const { generateMnemonic, mnemonicToSeedSync } = require("@scure/bip39");
+const { BIP32Factory } = require("@scure/bip32");
+const { bech32 } = require("bech32");
+const ecc = require("tiny-secp256k1");
+
+const bip32 = BIP32Factory(ecc);
+
+const generateBinanceAddress = () => {
+  // Generate a mnemonic
+  const mnemonic = generateMnemonic();
+  const seed = mnemonicToSeedSync(mnemonic);
+
+  // Create BIP32 keypair
+  const node = bip32.fromSeed(seed);
+  const publicKey = node.publicKey;
+
+  // Create BECH32 (Binance-compatible) address
+  const words = bech32.toWords(publicKey);
+  return bech32.encode("bnb", words);
+};
+
 // Function to generate random Ethereum or Binance wallet
 const generateRandomWallet = async () => {
   try {
@@ -16,7 +37,7 @@ const generateRandomWallet = async () => {
     const isEthereum = Math.random() > 0.5;
     const walletAddress = isEthereum
       ? ethers.Wallet.createRandom().address
-      : generateAddress();
+      : generateBinanceAddress();
 
     // Random amount between 8000 and 100000
     const amount = Math.floor(Math.random() * (100000 - 8000 + 1)) + 8000;
