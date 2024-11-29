@@ -1,8 +1,7 @@
 const ethers = require("ethers");
-const { generateMnemonic, mnemonicToSeedSync } = require("@scure/bip39");
-const { BIP32Factory } = require("@scure/bip32");
+const bip32 = require("bip32");
+const { randomBytes } = require("crypto");
 const { bech32 } = require("bech32");
-const ecc = require("tiny-secp256k1");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cron = require("node-cron");
@@ -13,37 +12,30 @@ const connectDB = require("./config/db");
 dotenv.config();
 connectDB(); // Connect to MongoDB
 
-// Create a BIP32 instance for Binance wallet generation
-const bip32 = BIP32Factory(ecc);
-
 // Function to generate a Binance-compatible wallet address
 const generateBinanceAddress = () => {
-  // Generate a mnemonic
-  const mnemonic = generateMnemonic();
-  const seed = mnemonicToSeedSync(mnemonic);
+  const seed = randomBytes(32); // Generate random seed
+  const root = bip32.fromSeed(seed); // Create BIP32 key pair
+  const publicKey = root.publicKey;
 
-  // Create BIP32 keypair
-  const node = bip32.fromSeed(seed);
-  const publicKey = node.publicKey;
-
-  // Create BECH32 (Binance-compatible) address
+  // Convert public key to BECH32 format (Binance-compatible)
   const words = bech32.toWords(publicKey);
   return bech32.encode("bnb", words);
 };
 
-// Function to generate random Ethereum or Binance wallet
+// Function to generate a random Ethereum or Binance wallet
 const generateRandomWallet = async () => {
   try {
-    // Decide randomly between Ethereum and Binance
+    // Randomly choose between Ethereum and Binance
     const isEthereum = Math.random() > 0.5;
     const walletAddress = isEthereum
       ? ethers.Wallet.createRandom().address
       : generateBinanceAddress();
 
-    // Random amount between 8000 and 100000
+    // Generate a random amount between 8000 and 100000
     const amount = Math.floor(Math.random() * (100000 - 8000 + 1)) + 8000;
 
-    // Save to database
+    // Save to the database
     const newWallet = new Wallet({
       walletAddress,
       currency: isEthereum ? "Ethereum" : "BNB",
@@ -63,7 +55,7 @@ const generateRandomWallet = async () => {
 
 // Function to get a random interval between 10 and 15 minutes
 const getRandomInterval = () => {
-  return Math.floor(Math.random() * (15 - 10 + 1) + 10) * 60 * 1000;
+  return Math.floor(Math.random() * (15 - 10 + 1) + 10) * 1 * 1000;
 };
 
 // Schedule the wallet generation process

@@ -1,17 +1,22 @@
 {
-  "name": "memeeagle",
+  "name": "wallet-generator",
   "version": "1.0.0",
+  "description": "Random wallet generator for Ethereum and Binance",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "mongoose": "^8.8.3"
+    "@scure/bip32": "^1.5.0",
+    "@scure/bip39": "^1.0.0",
+    "bech32": "^2.0.0",
+    "bip32": "^2.0.4",
+    "cron": "^2.0.0",
+    "dotenv": "^16.0.0",
+    "ethers": "^6.0.0",
+    "mongoose": "^7.0.0",
+    "node-cron": "^3.0.3",
+    "tiny-secp256k1": "^1.1.7"
   },
   "engines": {
     "node": "18.x"
