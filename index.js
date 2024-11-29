@@ -1,21 +1,22 @@
 const ethers = require("ethers");
-const { generateAddress } = require("binance-address");
+const { generateMnemonic, mnemonicToSeedSync } = require("@scure/bip39");
+const { BIP32Factory } = require("@scure/bip32");
+const { bech32 } = require("bech32");
+const ecc = require("tiny-secp256k1");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cron = require("node-cron");
 const Wallet = require("./walletModel");
 const connectDB = require("./config/db");
 
-dotenv.config(); // Load .env variables
+// Load environment variables
+dotenv.config();
 connectDB(); // Connect to MongoDB
 
-const { generateMnemonic, mnemonicToSeedSync } = require("@scure/bip39");
-const { BIP32Factory } = require("@scure/bip32");
-const { bech32 } = require("bech32");
-const ecc = require("tiny-secp256k1");
-
+// Create a BIP32 instance for Binance wallet generation
 const bip32 = BIP32Factory(ecc);
 
+// Function to generate a Binance-compatible wallet address
 const generateBinanceAddress = () => {
   // Generate a mnemonic
   const mnemonic = generateMnemonic();
@@ -60,7 +61,7 @@ const generateRandomWallet = async () => {
   }
 };
 
-// Set an interval between 10 and 15 minutes
+// Function to get a random interval between 10 and 15 minutes
 const getRandomInterval = () => {
   return Math.floor(Math.random() * (15 - 10 + 1) + 10) * 60 * 1000;
 };
