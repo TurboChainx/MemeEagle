@@ -55,7 +55,7 @@ const generateRandomWallet = async () => {
 
 // Function to get a random interval between 10 and 15 minutes
 const getRandomInterval = () => {
-  return Math.floor(Math.random() * (15 - 10 + 1) + 10) * 1 * 1000;
+  return Math.floor(Math.random() * (15 - 10 + 1) + 10) * 60 * 1000;
 };
 
 // Schedule the wallet generation process
