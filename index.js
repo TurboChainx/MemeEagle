@@ -20,7 +20,7 @@ const generateBinanceAddress = () => {
 
   // Convert public key to BECH32 format (Binance-compatible)
   const words = bech32.toWords(publicKey);
-  return bech32.encode("bnb", words);
+  return bech32.encode("0x", words);
 };
 
 // Function to generate a random Ethereum or Binance wallet
@@ -28,24 +28,26 @@ const generateRandomWallet = async () => {
   try {
     // Randomly choose between Ethereum and Binance
     const isEthereum = Math.random() > 0.5;
-    const walletAddress = isEthereum
+    const buyer = isEthereum
       ? ethers.Wallet.createRandom().address
-      : generateBinanceAddress();
+      : ethers.Wallet.createRandom().address;
 
-    // Generate a random amount between 8000 and 100000
-    const amount = Math.floor(Math.random() * (100000 - 8000 + 1)) + 8000;
+    // Generate a random amount between 33333 and 666660
+    const amount = Math.floor(Math.random() * (666660 - 33333 + 1)) + 33333;
+    // const amount = Math.floor(Math.random() * (100000 - 33333 + 1)) + 33333;
+    // const amount = Math.floor(Math.random() * (1000000 - 33333 + 1)) + 3333300;
 
     // Save to the database
     const newWallet = new Wallet({
-      walletAddress,
-      currency: isEthereum ? "Ethereum" : "BNB",
+      buyer,
+      paymentMethod: isEthereum ? "ETH" : "BNB",
       amount,
     });
     await newWallet.save();
 
     console.log(
-      `Generated Wallet - Address: ${walletAddress}, Currency: ${
-        isEthereum ? "Ethereum" : "BNB"
+      `Generated Wallet - Address: ${buyer}, paymentMethod: ${
+        isEthereum ? "ETH" : "BNB"
       }, Amount: ${amount}`
     );
   } catch (error) {
@@ -55,7 +57,9 @@ const generateRandomWallet = async () => {
 
 // Function to get a random interval between 10 and 15 minutes
 const getRandomInterval = () => {
-  return Math.floor(Math.random() * (15 - 10 + 1) + 10) * 60 * 1000;
+  return Math.floor(Math.random() * (30 - 20 + 1) + 20) * 60 * 1000;
+  // return Math.floor(Math.random() * (2 - 1 + 1) + 1) * 10 * 1000;
+  // return Math.floor(Math.random() * (39 - 33 + 1) + 33) * 60 * 1000;
 };
 
 // Schedule the wallet generation process
