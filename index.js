@@ -34,8 +34,9 @@ const generateRandomWallet = async () => {
 
     // Generate a random amount between 33333 and 666660
     // const amount = Math.floor(Math.random() * (666660 - 33333 + 1)) + 33333;
-    // const amount = Math.floor(Math.random() * (100000 - 33333 + 1)) + 33333;
-    const amount = Math.floor(Math.random() * (1000000 - 33333 + 1)) + 3333300;
+    const amount = Math.floor(Math.random() * (100000 - 33333 + 1)) + 33333;
+    // const amount = Math.floor(Math.random() * (1000000 - 33333 + 1)) + 3333300;
+    // const amount = 3333200;
 
     // Save to the database
     const newWallet = new Wallet({
@@ -57,8 +58,8 @@ const generateRandomWallet = async () => {
 
 // Function to get a random interval between 10 and 15 minutes
 const getRandomInterval = () => {
-  // return Math.floor(Math.random() * (30 - 20 + 1) + 20) * 60 * 1000;
-  return Math.floor(Math.random() * (2 - 1 + 1) + 1) * 10 * 1000;
+  return Math.floor(Math.random() * (30 - 20 + 1) + 20) * 60 * 1000;
+  // return Math.floor(Math.random() * (2 - 1 + 1) + 1) * 10 * 1000;
   // return Math.floor(Math.random() * (39 - 33 + 1) + 33) * 60 * 1000;
 };
 
